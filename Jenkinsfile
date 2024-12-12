@@ -17,12 +17,16 @@ pipeline {
         }
         stage('Package') {
             steps {
+                // -DskipTests: skip the tests execution
+                // -Dquarkus.package.type=uber-jar: create a package with the application and all the required dependencies
+                // archiveArtifacts: provide a string parameter with the files u want to archive
                 sh '''
                     ./mvnw package -DskipTests \
                     -Dquarkus.package.type=uber-jar
                 '''
                 archiveArtifacts 'target/*.jar'
             }
+            // creates an uber-JAR file, and stores it in Jenkins
         }
         stage('Build Image') {
             environment { QUAY = credentials('QUAY_USER') }
